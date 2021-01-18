@@ -1,0 +1,16 @@
+Host bastion
+  IdentityFile id_ed25519
+  Hostname localhost
+  Port 2222
+  User user
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+
+Host internal
+  IdentityFile id_ed25519
+  Hostname internal
+  Port 2222
+  User user
+  ProxyJump bastion
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no

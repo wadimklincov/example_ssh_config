@@ -1,0 +1,43 @@
+---
+version: "3.8"
+
+services:
+  bastion:
+    image: ghcr.io/linuxserver/openssh-server
+    container_name: bastion
+    hostname: bastion
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - SUDO_ACCESS=true
+      - USER_NAME=user
+      - USER_PASSWORD=pass
+      - PUBLIC_KEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFVeuI+0Wm3vatVjbQuE3JeNDFKeZfhVok1dsZje+xzJ test@key
+    ports:
+      - 2222:2222
+    volumes:
+      - ./config:/config
+    restart: unless-stopped
+    networks: [frontend, backend]
+
+  internal:
+    image: ghcr.io/linuxserver/openssh-server
+    container_name: internal
+    hostname: internal
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - SUDO_ACCESS=true
+      - USER_NAME=user
+      - USER_PASSWORD=pass
+      - PUBLIC_KEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFVeuI+0Wm3vatVjbQuE3JeNDFKeZfhVok1dsZje+xzJ test@key
+    restart: unless-stopped
+    networks: [backend]
+
+networks:
+  frontend:
+    internal: false
+  backend:
+    internal: true
